@@ -1,24 +1,29 @@
-console.log ("hello world")
-
+console.log ("hello world");
+//imports
 const express = require('express');
+
 const { appendFile } = require('fs');
 
 const bodyParser = require("body-parser");
-
+//creating webserver
 const https = require('https');
 const app = express();
-
+const path = require("path"); 
 const hostname = "127.0.0.1";
 const port = 8000;
- 
+
 // view engine ejs
 app.set('view engine', 'ejs')
+
+
+app.use(express.static(path.join(__dirname, "Public")));
+app.use(express.static("Public"))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-app.use(express.static("public"))
+
 
       
 
@@ -28,19 +33,22 @@ app.listen(port, hostname, function() {
 })
 // home
 app.get('/', (req, res) => {
-   
-   res.send('Hello World!')
+   res.render('home')
  })
 
 //pulling list of cities
- app.get('/get', (req, res) => {
-//open weather api
-let url = "https://api.openweathermap.org/data/2.5/weather?q=Purnia&appid=f7acf97acded1337d827c9793c63907a&units=metric";
+ app.get('/:location', (req, res) => {
+//location from url
+location = [req.params.location];
+//open weather api api (q="location") (appid="apikey") location 
+let url = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=f7acf97acded1337d827c9793c63907a&units=metric" 
 https.get(url, (response) => {
     if (response.statusCode === 200) {    
         response.on("data", (data) => {
         const results = JSON.parse(data);
+        //logging results to console
         console.log(results)
+        
     }) 
     } else {
         console.log("0")
