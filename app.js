@@ -1,5 +1,5 @@
-console.log ("hello world");
 //imports
+require('dotenv').config();
 const express = require('express');
 
 const { appendFile } = require('fs');
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 //location from url
 location = [req.params.location];
 //open weather api api (q="location") (appid="apikey") location 
-let url = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=f7acf97acded1337d827c9793c63907a&units=metric" 
+let url = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + process.env.appid + "&units=metric" 
 https.get(url, (response) => {
     if (response.statusCode === 200) {    
         response.on("data", (data) => {
